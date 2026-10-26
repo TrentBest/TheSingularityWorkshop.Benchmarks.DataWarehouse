@@ -1,1 +1,1 @@
-# TheSingularityWorkshop.Benchmarks..DataWarehouse
+# TheSingularityWorkshop.Benchmarks.DataWarehouse

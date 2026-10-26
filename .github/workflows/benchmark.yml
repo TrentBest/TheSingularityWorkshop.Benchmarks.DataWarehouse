@@ -1,0 +1,45 @@
+name: DataWarehouse Benchmarks
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [development]
+    paths:
+      - '**.cs'
+      - '**.csproj'
+      - '.github/workflows/benchmark.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out benchmark suite
+        uses: actions/checkout@v4
+        with:
+          path: TheSingularityWorkshop.Benchmarks.DataWarehouse
+
+      - name: Check out DataWarehouse
+        uses: actions/checkout@v4
+        with:
+          repository: TrentBest/TheSingularityWorkshop.DataWarehouse
+          ref: development
+          path: TheSingularityWorkshop.DataWarehouse
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Run benchmark suite
+        run: dotnet run --project TheSingularityWorkshop.Benchmarks.DataWarehouse/TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release -- --exporters json markdown
+
+      - name: Upload benchmark reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: datawarehouse-benchmark-results
+          path: TheSingularityWorkshop.Benchmarks.DataWarehouse/BenchmarkDotNet.Artifacts
+          if-no-files-found: warn

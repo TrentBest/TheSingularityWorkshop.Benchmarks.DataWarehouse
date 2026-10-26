@@ -1,12 +1,13 @@
 using BenchmarkDotNet.Attributes;
 using TheSingularityWorkshop.DataWarehouse;
+using Warehouse = TheSingularityWorkshop.DataWarehouse.DataWarehouse;
 
 namespace TheSingularityWorkshop.Benchmarks.DataWarehouse.Benchmarks;
 
 [MemoryDiagnoser]
 public class LifecycleBenchmarks
 {
-    private DataWarehouse _warehouse = null!;
+    private Warehouse _warehouse = null!;
     private DataShelf<Payload> _shelf = null!;
     private readonly Dictionary<int, Payload> _dictionary = new();
     private int _nextKey;
@@ -14,7 +15,7 @@ public class LifecycleBenchmarks
     [GlobalSetup]
     public void Setup()
     {
-        _warehouse = new DataWarehouse();
+        _warehouse = new Warehouse();
         _shelf = _warehouse.CreateShelf<Payload>(1024);
     }
 

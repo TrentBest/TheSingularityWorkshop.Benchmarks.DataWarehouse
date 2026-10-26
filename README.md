@@ -35,7 +35,7 @@ flowchart LR
 
 ## 01 What
 
-The suite currently measures sequential reads, sequential writes, and allocation/reclamation for named implementations. It uses BenchmarkDotNet in Release mode and preserves reports as workflow artifacts.
+The suite currently measures sequential reads, sequential writes, allocation/reclamation, handle-state queries, dirty-state transitions, and dirty-slot enumeration at controlled dirty densities. It uses BenchmarkDotNet in Release mode and preserves reports as workflow artifacts.
 
 ## 02 Why
 
@@ -72,7 +72,7 @@ Filter to a suite:
 
 ```sh
 dotnet run --project TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release -- --filter '*AccessReadBenchmarks*'
-dotnet run --project TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release -- --filter '*LifecycleBenchmarks*'
+dotnet run --project TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release -- --filter '*LifecycleBenchmarks*'\ndotnet run --project TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release -- --filter '*TrackingQueryBenchmarks*'\ndotnet run --project TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release -- --filter '*DirtyEnumerationBenchmarks*'
 ```
 
 The project references the sibling source checkout intentionally while the library is under reconstruction. No NuGet package is published or required.
@@ -91,7 +91,7 @@ The project references the sibling source checkout intentionally while the libra
 |---|---|---|
 | `AccessReadBenchmarks.ArrayRead` | Sequential record read control | Array, dictionary, DataShelf handle |
 | `AccessWriteBenchmarks.ArrayWrite` | Sequential record write control | Array, dictionary, DataShelf handle plus dirty bit |
-| `LifecycleBenchmarks.DataShelfAllocateAndFree` | Slot allocation and reclamation | DataShelf free-stack path versus dictionary add/remove |
+| `LifecycleBenchmarks.DataShelfAllocateAndFree` | Slot allocation and reclamation | DataShelf free-stack path versus dictionary add/remove |\n| `TrackingQueryBenchmarks.IsAliveValidHandle` | Valid-handle liveness query | DataShelf liveness bitmap and handle validation |\n| `TrackingQueryBenchmarks.IsDirtyCleanHandle` | Clean-handle dirty-state query | DataShelf dirty bitmap and handle validation |\n| `TrackingQueryBenchmarks.MarkCleanAndRedirty` | Clean/dirty transition pair | Repeated dirty-bit transition on a valid handle |\n| `DirtyEnumerationBenchmarks.CopyDirtySlots` | Dirty slot enumeration | 0%, 1%, 50%, and 100% dirty density, 65,536-slot shelf |
 
 The access suite uses 65,536 pre-created records and cycles through them sequentially. Setup and teardown are outside the measured operations. Read and write comparisons use separate baselines.
 
@@ -100,7 +100,7 @@ The access suite uses 65,536 pre-created records and cycles through them sequent
 1. Capacity scaling: 1, 64, 1K, 64K, and million-slot shelves.
 2. Random versus sequential access; hot versus cold working sets.
 3. Allocation/free churn and fragmentation behavior.
-4. Dirty-bit marking, clean/reset costs, and dirty-slot enumeration density.
+4. Broader dirty-bit state transitions, larger capacity sweeps, and density scaling beyond the initial 65,536-slot enumeration cases.
 5. Page alignment and record-size effects.
 6. Allocation count and managed bytes on the steady-state path.
 7. Handle-validation overhead with direct pointer/index controls.

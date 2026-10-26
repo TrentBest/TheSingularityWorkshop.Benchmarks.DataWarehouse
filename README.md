@@ -6,34 +6,53 @@
 
 # TheSingularityWorkshop.Benchmarks.DataWarehouse
 
+[![Benchmarks](https://github.com/TrentBest/TheSingularityWorkshop.Benchmarks.DataWarehouse/actions/workflows/benchmark.yml/badge.svg?branch=development)](https://github.com/TrentBest/TheSingularityWorkshop.Benchmarks.DataWarehouse/actions/workflows/benchmark.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/TrentBest/TheSingularityWorkshop.Benchmarks.DataWarehouse/development)](https://github.com/TrentBest/TheSingularityWorkshop.Benchmarks.DataWarehouse/commits/development)
+
 **The performance laboratory for the Workshop's low-level DataWarehouse.**
 
-[![.NET](https://img.shields.io/badge/.NET-8.0-512BD4)](https://dotnet.microsoft.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-baseline%20in%20progress-00A6A6)](#benchmark-catalog)
+## 00 Identity
 
-This repository measures the low-level [DataWarehouse](https://github.com/TrentBest/TheSingularityWorkshop.DataWarehouse) reconstruction. It is deliberately separate from the higher-level AEC-facing [SingularityWarehouse](https://github.com/TrentBest/SingularityWarehouse).
+This repository tests the low-level [DataWarehouse](https://github.com/TrentBest/TheSingularityWorkshop.DataWarehouse) reconstruction. It is deliberately separate from the higher-level AEC-facing [SingularityWarehouse](https://github.com/TrentBest/SingularityWarehouse).
 
-## Benchmark rules
+Its job is to make performance claims reproducible, workload-specific, and reviewable—not to produce a single flattering number.
 
-- Keep benchmark names stable and specific; historical results must remain attributable to a workload.
-- Separate reads, writes, allocation, reclamation, dirty tracking, and scaling instead of blending them into one headline number.
-- Use BenchmarkDotNet in Release mode and preserve raw reports as CI artifacts.
-- Treat results as measurements of the named workload and machine—not universal performance claims.
-- Compare equivalent operations. A direct array access is a lower-bound control, not a claim that arrays and handle-validated storage have identical semantics.
-- Do not claim a speedup until repeated runs on comparable environments support it.
+## From question to evidence
 
-## Benchmark catalog
+```mermaid
+flowchart LR
+    Question["Performance question"]
+    Identity["Stable benchmark ID"]
+    Setup["Controlled setup"]
+    Measure["BenchmarkDotNet measurement"]
+    Report["Raw report artifact"]
+    Review["Compare same workload and environment"]
+    Question --> Identity --> Setup --> Measure --> Report --> Review
+```
 
-| Benchmark ID | What it measures | Current comparison |
-|---|---|---|
-| `AccessReadBenchmarks.ArrayRead` | Sequential record read control | Array, dictionary, DataShelf handle |
-| `AccessWriteBenchmarks.ArrayWrite` | Sequential record write control | Array, dictionary, DataShelf handle plus dirty bit |
-| `LifecycleBenchmarks.DataShelfAllocateAndFree` | Slot allocation and reclamation | DataShelf free-stack path versus dictionary add/remove |
+*Conceptual measurement workflow. The current CI workflow runs the configured suite and uploads BenchmarkDotNet reports; it does not yet enforce performance thresholds or automatically validate cross-run comparability.*
 
-The access suite uses 65,536 pre-created records and cycles through them sequentially. Setup and teardown are outside the measured operations. Read and write comparisons have separate baselines so ratios are meaningful within each operation category.
+## 01 What
 
-## Run locally
+The suite currently measures sequential reads, sequential writes, and allocation/reclamation for named implementations. It uses BenchmarkDotNet in Release mode and preserves reports as workflow artifacts.
+
+## 02 Why
+
+A benchmark result is meaningful only when the operation, setup, baseline, environment, and measured work are clear. An array access is a useful lower-bound control, not a semantically identical replacement for a generation-checked handle and dirty-bit update.
+
+Results describe the named workload on the recorded machine and runtime. They do not establish universal superiority.
+
+## 03 How
+
+- Keep benchmark IDs stable and specific so historical results remain attributable.
+- Separate reads, writes, allocation, reclamation, dirty tracking, and scaling.
+- Keep setup/teardown outside the measured operation unless setup cost is itself the subject.
+- Use baselines only within comparable operation categories.
+- Preserve reports; state the runtime, hardware, revision, and input scale when publishing conclusions.
+- Treat performance regressions as evidence to investigate, not as unexplained noise or an automatic failure until thresholds are explicitly justified.
+
+## 04 See it in a minute
 
 Requires the .NET 8 SDK and both repositories checked out as sibling directories:
 
@@ -43,7 +62,7 @@ workspace/
 └── TheSingularityWorkshop.Benchmarks.DataWarehouse/
 ```
 
-Run all benchmarks:
+Run the full suite:
 
 ```sh
 dotnet run --project TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release
@@ -56,25 +75,37 @@ dotnet run --project TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c R
 dotnet run --project TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release -- --filter '*LifecycleBenchmarks*'
 ```
 
-The project reference resolves to the sibling DataWarehouse checkout. This is intentional while the library is being reconstructed; no NuGet package is published or required.
+The project references the sibling source checkout intentionally while the library is under reconstruction. No NuGet package is published or required.
 
-## Automated reports
+## 05 Available documentation and theory
 
-The GitHub Actions workflow runs on demand and when relevant files change on `development`. It checks out both repositories, runs the suite in Release mode, and uploads BenchmarkDotNet reports as an artifact. Reports are evidence for review; this initial harness does not yet enforce performance thresholds.
+- [Documentation inventory and diagram status](docs/DocumentationInventory.md)
+- [Benchmark definitions](Benchmarks/)
+- [Automated workflow](.github/workflows/benchmark.yml)
+- [DataWarehouse implementation](https://github.com/TrentBest/TheSingularityWorkshop.DataWarehouse)
+- [BenchmarkDotNet documentation](https://benchmarkdotnet.org/)
 
-## Next benchmark areas
+## Benchmark catalog
+
+| Benchmark ID | What it measures | Current comparison |
+|---|---|---|
+| `AccessReadBenchmarks.ArrayRead` | Sequential record read control | Array, dictionary, DataShelf handle |
+| `AccessWriteBenchmarks.ArrayWrite` | Sequential record write control | Array, dictionary, DataShelf handle plus dirty bit |
+| `LifecycleBenchmarks.DataShelfAllocateAndFree` | Slot allocation and reclamation | DataShelf free-stack path versus dictionary add/remove |
+
+The access suite uses 65,536 pre-created records and cycles through them sequentially. Setup and teardown are outside the measured operations. Read and write comparisons use separate baselines.
+
+## Planned coverage—not results
 
 1. Capacity scaling: 1, 64, 1K, 64K, and million-slot shelves.
-2. Random versus sequential access, and hot versus cold working sets.
+2. Random versus sequential access; hot versus cold working sets.
 3. Allocation/free churn and fragmentation behavior.
 4. Dirty-bit marking, clean/reset costs, and dirty-slot enumeration density.
 5. Page alignment and record-size effects.
 6. Allocation count and managed bytes on the steady-state path.
-7. Handle validation overhead, with a direct pointer/index control.
+7. Handle-validation overhead with direct pointer/index controls.
 8. Multiple shelves and independent data types.
 
-These are planned benchmark categories, not measured results.
+These are planned categories, not measured results. The current CI workflow confirms that the configured harness runs and produces artifacts; it does not yet establish a performance winner or enforce regression limits.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/TrentBest/TheSingularityWorkshop.Visualize/development/docs/assets/Avatar.jpg" alt="The Singularity Workshop avatar" width="96" />
-</p>
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_COS/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>

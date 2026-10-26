@@ -36,7 +36,7 @@ public class TrackingQueryBenchmarks
             _shelf.MarkClean(_handles[i]);
     }
 
-    [Benchmark(Baseline = true, Description = "Tracking.IsAlive.ValidHandle")]
+    [Benchmark(Description = "Tracking.IsAlive.ValidHandle")]
     public bool IsAliveValidHandle() => _shelf.IsAlive(NextHandle());
 
     [Benchmark(Description = "Tracking.IsDirty.CleanHandle")]
@@ -46,7 +46,8 @@ public class TrackingQueryBenchmarks
     public bool MarkCleanAndRedirty()
     {
         var handle = NextHandle();
-        _shelf.GetRef(handle) = _shelf.Read(handle);
+        var value = _shelf.Read(handle);
+        _shelf.GetRef(handle) = value;
         return _shelf.MarkClean(handle);
     }
 

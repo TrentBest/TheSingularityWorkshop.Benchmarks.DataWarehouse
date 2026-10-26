@@ -81,7 +81,7 @@ public class AccessWriteBenchmarks
     private const int RecordCount = 65_536;
     private Payload[] _array = null!;
     private Dictionary<int, Payload> _dictionary = null!;
-    private DataWarehouse _warehouse = null!;
+    private Warehouse _warehouse = null!;
     private DataShelf<Payload> _shelf = null!;
     private DataHandle[] _handles = null!;
     private int _cursor;
@@ -91,7 +91,7 @@ public class AccessWriteBenchmarks
     {
         _array = new Payload[RecordCount];
         _dictionary = new Dictionary<int, Payload>(RecordCount);
-        _warehouse = new DataWarehouse();
+        _warehouse = new Warehouse();
         _shelf = _warehouse.CreateShelf<Payload>(RecordCount);
         _handles = new DataHandle[RecordCount];
 

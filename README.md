@@ -14,7 +14,7 @@
 
 ## 00 Identity
 
-This repository tests the low-level [DataWarehouse](https://github.com/TrentBest/TheSingularityWorkshop.DataWarehouse) reconstruction. It is deliberately separate from the higher-level AEC-facing [SingularityWarehouse](https://github.com/TrentBest/SingularityWarehouse).
+This repository is the performance laboratory for the Workshop's low-level DataWarehouse library.
 
 Its job is to make performance claims reproducible, workload-specific, and reviewable—not to produce a single flattering number.
 
@@ -108,4 +108,4 @@ The access suite uses 65,536 pre-created records and cycles through them sequent
 
 These are planned categories, not measured results. The current CI workflow confirms that the configured harness runs and produces artifacts; it does not yet establish a performance winner or enforce regression limits.
 
-<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_COS/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>

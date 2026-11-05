@@ -10,6 +10,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Last commit](https://img.shields.io/github/last-commit/TrentBest/TheSingularityWorkshop.Benchmarks.DataWarehouse/development)](https://github.com/TrentBest/TheSingularityWorkshop.Benchmarks.DataWarehouse/commits/development)
 
+[![Sith Policy](assets/sith-policy.svg)](https://github.com/TrentBest/TheSingularityWorkshop.Benchmarks.DataWarehouse/actions/workflows/sith-policy.yml)
 **The performance laboratory for the Workshop's low-level DataWarehouse.**
 
 ## 00 Identity

@@ -92,13 +92,18 @@ The project references the sibling source checkout intentionally while the libra
 
 | Benchmark ID | What it measures | Current comparison |
 |---|---|---|
-| `AccessReadBenchmarks.ArrayRead` | Sequential record read control | Array, dictionary, DataShelf handle |
-| `AccessWriteBenchmarks.ArrayWrite` | Sequential record write control | Array, dictionary, DataShelf handle validation plus dirty-bit transition and clean reset |
-| `LifecycleBenchmarks.DataShelfAllocateAndFree` | Slot allocation and reclamation | DataShelf free-stack path versus dictionary add/remove |
-| `TrackingQueryBenchmarks.IsAliveValidHandle` | Valid-handle liveness query | DataShelf liveness bitmap and handle validation |
-| `TrackingQueryBenchmarks.IsDirtyCleanHandle` | Clean-handle dirty-state query | DataShelf dirty bitmap and handle validation |
-| `TrackingQueryBenchmarks.MarkCleanAndRedirty` | Clean/dirty transition pair | Repeated dirty-bit transition on a valid handle |
-| `DirtyEnumerationBenchmarks.CopyDirtySlots` | Dirty slot enumeration | 0%, 1%, 50%, and 100% dirty density, 65,536-slot shelf |
+| `DWH-ACCESS-READ-ARRAY` | Sequential record read control | Array lower bound |
+| `DWH-ACCESS-READ-DICTIONARY` | Sequential record read | Dictionary lookup |
+| `DWH-ACCESS-READ-DATASHELF` | Sequential record read | Validated DataShelf handle |
+| `DWH-ACCESS-WRITE-ARRAY` | Sequential record write control | Array lower bound |
+| `DWH-ACCESS-WRITE-DICTIONARY` | Sequential record write | Dictionary lookup/update |
+| `DWH-ACCESS-WRITE-DATASHELF-DIRTY-ROUNDTRIP` | Record write plus dirty-bit set/clear | Validated handle and dirty-state round trip |
+| `DWH-LIFECYCLE-ALLOCATE-FREE` | Slot allocation and reclamation | DataShelf free-stack path |
+| `DWH-LIFECYCLE-DICTIONARY-ADD-REMOVE` | Add/remove lifecycle control | Dictionary |
+| `DWH-TRACKING-IS-ALIVE` | Valid-handle liveness query | DataShelf liveness bitmap and handle validation |
+| `DWH-TRACKING-IS-DIRTY` | Clean-handle dirty-state query | DataShelf dirty bitmap and handle validation |
+| `DWH-TRACKING-DIRTY-ROUNDTRIP` | Clean/dirty transition pair | Repeated dirty-bit transition on a valid handle |
+| `DWH-TRACKING-COPY-DIRTY-SLOTS` | Dirty slot enumeration | 0%, 1%, 50%, and 100% dirty density, 65,536-slot shelf |
 
 The access suite uses 65,536 pre-created records and cycles through them sequentially. Setup and teardown are outside the measured operations. For the DataShelf write case, each timed invocation writes through the validated handle (setting the dirty bit) and then marks it clean again. This deliberately measures the full dirty-bit transition round trip plus the record mutation, not an isolated pointer write. Read and write comparisons use separate lower-bound controls; they are not claimed to be semantically identical implementations.
 

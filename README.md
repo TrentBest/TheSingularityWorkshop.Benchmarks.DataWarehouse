@@ -107,6 +107,10 @@ The project references the sibling source checkout intentionally while the libra
 
 The access suite uses 65,536 pre-created records and cycles through them sequentially. Setup and teardown are outside the measured operations. For the DataShelf write case, each timed invocation writes through the validated handle (setting the dirty bit) and then marks it clean again. This deliberately measures the full dirty-bit transition round trip plus the record mutation, not an isolated pointer write. Read and write comparisons use separate lower-bound controls; they are not claimed to be semantically identical implementations.
 
+## Latest measured findings
+
+[DataWarehouse Benchmark Findings — run 42186813963](docs/DATAWAREHOUSE_FINDINGS_2026-11-06_RUN_42186813963.md) records the first complete 15-case hosted run, including the source/harness commits, environment, stable-ID results, and limitations. The raw BenchmarkDotNet reports and environment manifest are retained in the [workflow artifact](https://github.com/TrentBest/TheSingularityWorkshop.Benchmarks.DataWarehouse/actions/runs/42186813963/artifacts/13488036995). This is exploratory single-run evidence, not a stable baseline.
+
 ## Planned coverage—not results
 
 1. Capacity scaling: 1, 64, 1K, 64K, and million-slot shelves.

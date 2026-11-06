@@ -93,14 +93,14 @@ The project references the sibling source checkout intentionally while the libra
 | Benchmark ID | What it measures | Current comparison |
 |---|---|---|
 | `AccessReadBenchmarks.ArrayRead` | Sequential record read control | Array, dictionary, DataShelf handle |
-| `AccessWriteBenchmarks.ArrayWrite` | Sequential record write control | Array, dictionary, DataShelf handle validation plus clean-to-dirty bit transition |
+| `AccessWriteBenchmarks.ArrayWrite` | Sequential record write control | Array, dictionary, DataShelf handle validation plus dirty-bit transition and clean reset |
 | `LifecycleBenchmarks.DataShelfAllocateAndFree` | Slot allocation and reclamation | DataShelf free-stack path versus dictionary add/remove |
 | `TrackingQueryBenchmarks.IsAliveValidHandle` | Valid-handle liveness query | DataShelf liveness bitmap and handle validation |
 | `TrackingQueryBenchmarks.IsDirtyCleanHandle` | Clean-handle dirty-state query | DataShelf dirty bitmap and handle validation |
 | `TrackingQueryBenchmarks.MarkCleanAndRedirty` | Clean/dirty transition pair | Repeated dirty-bit transition on a valid handle |
 | `DirtyEnumerationBenchmarks.CopyDirtySlots` | Dirty slot enumeration | 0%, 1%, 50%, and 100% dirty density, 65,536-slot shelf |
 
-The access suite uses 65,536 pre-created records and cycles through them sequentially. Setup and teardown are outside the measured operations. For the DataShelf write case, an invocation setup resets the selected handle to clean outside the timed region so each measured write exercises the clean-to-dirty transition. Read and write comparisons use separate lower-bound controls; they are not claimed to be semantically identical implementations.
+The access suite uses 65,536 pre-created records and cycles through them sequentially. Setup and teardown are outside the measured operations. For the DataShelf write case, each timed invocation writes through the validated handle (setting the dirty bit) and then marks it clean again. This deliberately measures the full dirty-bit transition round trip plus the record mutation, not an isolated pointer write. Read and write comparisons use separate lower-bound controls; they are not claimed to be semantically identical implementations.
 
 ## Planned coverage—not results
 

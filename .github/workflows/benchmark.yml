@@ -25,13 +25,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: TrentBest/TheSingularityWorkshop.DataWarehouse
-          ref: development
+          ref: a019d006dbb2eb4cb525cd3977c9eafaf6eee616
           path: TheSingularityWorkshop.DataWarehouse
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+
+      - name: Build benchmark harness
+        run: dotnet build TheSingularityWorkshop.Benchmarks.DataWarehouse/TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release
 
       - name: Run benchmark suite
         run: dotnet run --project TheSingularityWorkshop.Benchmarks.DataWarehouse/TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release -- --exporters json markdown

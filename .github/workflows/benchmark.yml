@@ -64,5 +64,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: datawarehouse-benchmark-results
-          path: |\n            TheSingularityWorkshop.Benchmarks.DataWarehouse/BenchmarkDotNet.Artifacts/**\n            TheSingularityWorkshop.Benchmarks.DataWarehouse/results/environment/**
+          path: |
+            TheSingularityWorkshop.Benchmarks.DataWarehouse/BenchmarkDotNet.Artifacts/**
+            TheSingularityWorkshop.Benchmarks.DataWarehouse/results/environment/**
           if-no-files-found: warn

@@ -19,7 +19,7 @@ public class LifecycleBenchmarks
         _shelf = _warehouse.CreateShelf<Payload>(1024);
     }
 
-    [Benchmark(Description = "DataShelf.AllocateAndFree")]
+    [Benchmark(Description = "DWH-LIFECYCLE-ALLOCATE-FREE")]
     public int DataShelfAllocateAndFree()
     {
         if (!_shelf.TryAllocate(out var handle))
@@ -29,7 +29,7 @@ public class LifecycleBenchmarks
         return handle.Slot;
     }
 
-    [Benchmark(Description = "Dictionary.AddAndRemove")]
+    [Benchmark(Description = "DWH-LIFECYCLE-DICTIONARY-ADD-REMOVE")]
     public int DictionaryAddAndRemove()
     {
         var key = _nextKey++;

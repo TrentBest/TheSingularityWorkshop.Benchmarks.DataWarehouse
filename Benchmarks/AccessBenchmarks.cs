@@ -123,16 +123,15 @@ public class AccessWriteBenchmarks
         _dictionary[index] = value;
     }
 
-    // Reset outside the timed invocation so every measured shelf write exercises
-    // the clean-to-dirty transition rather than only the already-dirty steady state.
-    [InvocationSetup(Target = nameof(DataShelfWrite))]
-    public void ResetDataShelfDirtyState() => _shelf.MarkClean(_handles[_cursor]);
-
-    [Benchmark(Description = "DataShelf.Write.HandleAndDirtyTransition")]
+    [Benchmark(Description = "DataShelf.Write.HandleDirtyTransitionAndReset")]
     public void DataShelfWrite()
     {
         var index = NextIndex();
-        _shelf.GetRef(_handles[index]).State++;
+        var handle = _handles[index];
+        _shelf.GetRef(handle).State++;
+        // Reset in the measured method so every invocation starts the next one clean.
+        // This intentionally measures the full dirty-bit round trip plus the write.
+        _shelf.MarkClean(handle);
     }
 
     [GlobalCleanup]

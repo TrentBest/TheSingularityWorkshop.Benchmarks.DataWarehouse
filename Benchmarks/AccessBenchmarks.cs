@@ -36,21 +36,21 @@ public class AccessReadBenchmarks
         }
     }
 
-    [Benchmark(Baseline = true, Description = "Array.Read.Sequential")]
+    [Benchmark(Baseline = true, Description = "DWH-ACCESS-READ-ARRAY")]
     public long ArrayRead()
     {
         var index = NextIndex();
         return _array[index].A;
     }
 
-    [Benchmark(Description = "Dictionary.Read.Sequential")]
+    [Benchmark(Description = "DWH-ACCESS-READ-DICTIONARY")]
     public long DictionaryRead()
     {
         var index = NextIndex();
         return _dictionary[index].A;
     }
 
-    [Benchmark(Description = "DataShelf.Read.Handle")]
+    [Benchmark(Description = "DWH-ACCESS-READ-DATASHELF")]
     public long DataShelfRead()
     {
         var index = NextIndex();
@@ -107,14 +107,14 @@ public class AccessWriteBenchmarks
         }
     }
 
-    [Benchmark(Baseline = true, Description = "Array.Write.Sequential")]
+    [Benchmark(Baseline = true, Description = "DWH-ACCESS-WRITE-ARRAY")]
     public void ArrayWrite()
     {
         var index = NextIndex();
         _array[index].State++;
     }
 
-    [Benchmark(Description = "Dictionary.Write.Sequential")]
+    [Benchmark(Description = "DWH-ACCESS-WRITE-DICTIONARY")]
     public void DictionaryWrite()
     {
         var index = NextIndex();
@@ -123,7 +123,7 @@ public class AccessWriteBenchmarks
         _dictionary[index] = value;
     }
 
-    [Benchmark(Description = "DataShelf.Write.HandleDirtyTransitionAndReset")]
+    [Benchmark(Description = "DWH-ACCESS-WRITE-DATASHELF-DIRTY-ROUNDTRIP")]
     public void DataShelfWrite()
     {
         var index = NextIndex();

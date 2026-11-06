@@ -36,13 +36,13 @@ public class TrackingQueryBenchmarks
             _shelf.MarkClean(_handles[i]);
     }
 
-    [Benchmark(Description = "Tracking.IsAlive.ValidHandle")]
+    [Benchmark(Description = "DWH-TRACKING-IS-ALIVE")]
     public bool IsAliveValidHandle() => _shelf.IsAlive(NextHandle());
 
-    [Benchmark(Description = "Tracking.IsDirty.CleanHandle")]
+    [Benchmark(Description = "DWH-TRACKING-IS-DIRTY")]
     public bool IsDirtyCleanHandle() => _shelf.IsDirty(NextHandle());
 
-    [Benchmark(Description = "Tracking.MarkCleanAndRedirty")]
+    [Benchmark(Description = "DWH-TRACKING-DIRTY-ROUNDTRIP")]
     public bool MarkCleanAndRedirty()
     {
         var handle = NextHandle();
@@ -97,7 +97,7 @@ public class DirtyEnumerationBenchmarks
             _shelf.MarkClean(handles[i]);
     }
 
-    [Benchmark(Description = "Tracking.CopyDirtySlots.Density")]
+    [Benchmark(Description = "DWH-TRACKING-COPY-DIRTY-SLOTS")]
     public int CopyDirtySlots() => _shelf.CopyDirtySlots(_destination);
 
     [GlobalCleanup]

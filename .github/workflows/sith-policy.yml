@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - "**"
+    paths-ignore:
+      - "assets/sith-policy.svg"
+      - "assets/sith-policy.json"
   delete:
   schedule:
     - cron: "17 4 * * *"

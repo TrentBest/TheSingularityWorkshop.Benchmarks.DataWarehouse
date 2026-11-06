@@ -33,6 +33,26 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Capture benchmark provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p TheSingularityWorkshop.Benchmarks.DataWarehouse/results/environment
+          {
+            echo "benchmark_repository=TrentBest/TheSingularityWorkshop.Benchmarks.DataWarehouse"
+            echo "benchmark_commit=$(git -C TheSingularityWorkshop.Benchmarks.DataWarehouse rev-parse HEAD)"
+            echo "source_repository=TrentBest/TheSingularityWorkshop.DataWarehouse"
+            echo "source_commit=$(git -C TheSingularityWorkshop.DataWarehouse rev-parse HEAD)"
+            echo "captured_at_utc=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo "runner_os=$(uname -a)"
+            echo
+            dotnet --info
+            echo
+            lscpu
+            echo
+            free -h
+          } > TheSingularityWorkshop.Benchmarks.DataWarehouse/results/environment/manifest.txt
+
       - name: Build benchmark harness
         run: dotnet build TheSingularityWorkshop.Benchmarks.DataWarehouse/TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release
 
@@ -44,5 +64,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: datawarehouse-benchmark-results
-          path: TheSingularityWorkshop.Benchmarks.DataWarehouse/BenchmarkDotNet.Artifacts
+          path: |\n            TheSingularityWorkshop.Benchmarks.DataWarehouse/BenchmarkDotNet.Artifacts/**\n            TheSingularityWorkshop.Benchmarks.DataWarehouse/results/environment/**
           if-no-files-found: warn

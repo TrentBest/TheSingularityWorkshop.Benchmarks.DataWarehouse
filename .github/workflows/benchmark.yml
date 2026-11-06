@@ -65,6 +65,6 @@ jobs:
         with:
           name: datawarehouse-benchmark-results
           path: |
-            TheSingularityWorkshop.Benchmarks.DataWarehouse/BenchmarkDotNet.Artifacts/**
+            BenchmarkDotNet.Artifacts/**
             TheSingularityWorkshop.Benchmarks.DataWarehouse/results/environment/**
           if-no-files-found: warn

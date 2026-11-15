@@ -55,7 +55,7 @@ Results describe the named workload on the recorded machine and runtime. They do
 
 ## 04 See it in a minute
 
-Requires the .NET 8 SDK and both repositories checked out as sibling directories:
+Requires the .NET 10 SDK and both repositories checked out as sibling directories:
 
 ```text
 workspace/

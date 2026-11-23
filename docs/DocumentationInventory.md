@@ -16,7 +16,7 @@ This inventory follows the Workshop's FSM_COS documentation principles while ada
 | README / run instructions | Implemented | Identity, rules, current benchmark catalog, commands, limits |
 | Benchmark identity catalog | Partial | Current benchmark methods are named; stable machine-readable metadata and historical index are planned |
 | Per-benchmark methodology pages | Planned | Operation, setup, inputs, baseline, included costs, interpretation |
-| Benchmark workflow | Implemented | Runs suite in Release mode and uploads BenchmarkDotNet reports |
+| Benchmark workflow | Implemented | Pins the exact DataWarehouse source revision, runs in the repository SDK context, rejects generated-project failures/zero measurements, and uploads BenchmarkDotNet reports |
 | Result history / deltas | Planned | Comparable results indexed by benchmark ID, commit, runtime, and environment |
 | Capacity-scaling charts | Planned | Visualize growth across record counts |
 | Shared lake and growth benchmarks | Implemented | Shared region reuse, native region create/release, shelf growth with live records, and shelf-count scaling |

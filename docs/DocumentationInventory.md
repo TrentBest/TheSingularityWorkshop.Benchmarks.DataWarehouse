@@ -19,7 +19,7 @@ This inventory follows the Workshop's FSM_COS documentation principles while ada
 | Benchmark workflow | Implemented | Runs suite in Release mode and uploads BenchmarkDotNet reports |
 | Result history / deltas | Planned | Comparable results indexed by benchmark ID, commit, runtime, and environment |
 | Capacity-scaling charts | Planned | Visualize growth across record counts |
-| Allocation / dirty-tracking studies | Planned | Isolate metadata and lifecycle costs |
+| Shared lake and growth benchmarks | Implemented | Shared region reuse, native region create/release, shelf growth with live records, and shelf-count scaling |\n| Allocation / dirty-tracking studies | Partial | Lifecycle and dirty-tracking costs are covered; broader capacity, fragmentation, and randomized churn studies remain planned |
 | Sequence / activity diagrams | Partial | README conceptual measurement pipeline; detailed setup/measurement boundaries planned |
 | Class/type diagrams | Not applicable to the benchmark product goal | Source types are covered by the library's own documentation |
 | Test traceability | Planned | Map benchmark identities to the behavior or hypothesis each probes |

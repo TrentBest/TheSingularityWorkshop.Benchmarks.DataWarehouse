@@ -46,6 +46,6 @@ A green workflow is evidence that the configured job completed. It is not, by it
 
 Use the shared Workshop moniker at the top of primary Markdown documents and the canonical Workshop footer image:
 
-`https://raw.githubusercontent.com/TrentBest/FSM_COS/master/Documentation/Branding/TheSingularityWorkshop.png`
+`https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png`
 
 Keep the benchmark visual distinct from the library's memory diagram: it should show a traceable path from question to named workload to measurement to artifact and review.

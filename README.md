@@ -124,8 +124,8 @@ The access suite uses 65,536 pre-created records and cycles through them sequent
 5. Page alignment and record-size effects.
 6. Allocation count and managed bytes on the steady-state path.
 7. Region fragmentation and random allocate/free interleavings.
-7. Handle-validation overhead with direct pointer/index controls.
-8. Multiple shelves and independent data types.
+8. Handle-validation overhead with direct pointer/index controls.
+9. Multiple shelves and independent data types.
 
 These are planned categories, not measured results. The current CI workflow confirms that the configured harness runs and produces artifacts; it does not yet establish a performance winner or enforce regression limits.
 

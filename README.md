@@ -32,7 +32,7 @@ flowchart LR
     Question --> Identity --> Setup --> Measure --> Report --> Review
 ```
 
-*Conceptual measurement workflow. The current CI workflow runs the configured suite and uploads BenchmarkDotNet reports; it does not yet enforce performance thresholds or automatically validate cross-run comparability.*
+*Conceptual measurement workflow. The current CI workflow builds and runs the configured suite, fails if generated BenchmarkDotNet projects fail to build or no measurements execute, and uploads raw reports. It does not yet enforce performance thresholds or automatically validate cross-run comparability.*
 
 ## 01 What
 

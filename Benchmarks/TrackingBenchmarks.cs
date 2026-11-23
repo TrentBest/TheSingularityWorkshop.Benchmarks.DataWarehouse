@@ -42,6 +42,9 @@ public class TrackingQueryBenchmarks
     [Benchmark(Description = "DWH-TRACKING-IS-DIRTY")]
     public bool IsDirtyCleanHandle() => _shelf.IsDirty(NextHandle());
 
+    [Benchmark(Description = "DWH-TRACKING-TRY-GET-HANDLE")]
+    public bool TryGetCurrentHandle() => _shelf.TryGetHandle(NextHandle().Slot, out _);
+
     [Benchmark(Description = "DWH-TRACKING-DIRTY-ROUNDTRIP")]
     public bool MarkCleanAndRedirty()
     {

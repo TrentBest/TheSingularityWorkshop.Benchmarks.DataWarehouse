@@ -46,6 +46,7 @@ jobs:
             echo "captured_at_utc=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
             echo "runner_os=$(uname -a)"
             echo
+            cd TheSingularityWorkshop.Benchmarks.DataWarehouse
             dotnet --info
             echo
             lscpu
@@ -54,10 +55,33 @@ jobs:
           } > TheSingularityWorkshop.Benchmarks.DataWarehouse/results/environment/manifest.txt
 
       - name: Build benchmark harness
-        run: dotnet build TheSingularityWorkshop.Benchmarks.DataWarehouse/TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release
+        working-directory: TheSingularityWorkshop.Benchmarks.DataWarehouse
+        run: dotnet build TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release
 
       - name: Run benchmark suite
-        run: dotnet run --project TheSingularityWorkshop.Benchmarks.DataWarehouse/TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release -- --filter '*' --exporters json markdown
+        working-directory: TheSingularityWorkshop.Benchmarks.DataWarehouse
+        run: |
+          mkdir -p BenchmarkDotNet.Artifacts
+          dotnet run --project TheSingularityWorkshop.Benchmarks.DataWarehouse.csproj -c Release -- --filter '*' --exporters json markdown 2>&1 | tee BenchmarkDotNet.Artifacts/benchmark-run.log
+
+      - name: Validate measured benchmark execution
+        working-directory: TheSingularityWorkshop.Benchmarks.DataWarehouse
+        run: |
+          set -euo pipefail
+          if grep -q "BenchmarkDotNet has failed to build" BenchmarkDotNet.Artifacts/benchmark-run.log; then
+            echo "BenchmarkDotNet failed to build one or more generated benchmark projects."
+            exit 1
+          fi
+          if grep -q "executed benchmarks: 0" BenchmarkDotNet.Artifacts/benchmark-run.log; then
+            echo "BenchmarkDotNet completed without executing any measurements."
+            exit 1
+          fi
+          report_count=$(find BenchmarkDotNet.Artifacts/results -name '*-report-full-compressed.json' 2>/dev/null | wc -l)
+          if [ "$report_count" -eq 0 ]; then
+            echo "No full BenchmarkDotNet result reports were produced."
+            exit 1
+          fi
+          echo "Produced $report_count full BenchmarkDotNet result reports."
 
       - name: Upload benchmark reports
         if: always()
@@ -65,6 +89,6 @@ jobs:
         with:
           name: datawarehouse-benchmark-results
           path: |
-            BenchmarkDotNet.Artifacts/**
+            TheSingularityWorkshop.Benchmarks.DataWarehouse/BenchmarkDotNet.Artifacts/**
             TheSingularityWorkshop.Benchmarks.DataWarehouse/results/environment/**
           if-no-files-found: warn

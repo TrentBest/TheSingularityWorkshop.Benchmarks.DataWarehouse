@@ -107,31 +107,35 @@ public class AccessWriteBenchmarks
         }
     }
 
+    // Return the written value so the benchmark harness must observe the result.
     [Benchmark(Baseline = true, Description = "DWH-ACCESS-WRITE-ARRAY")]
-    public void ArrayWrite()
+    public int ArrayWrite()
     {
         var index = NextIndex();
-        _array[index].State++;
+        return ++_array[index].State;
     }
 
     [Benchmark(Description = "DWH-ACCESS-WRITE-DICTIONARY")]
-    public void DictionaryWrite()
+    public int DictionaryWrite()
     {
         var index = NextIndex();
         var value = _dictionary[index];
         value.State++;
         _dictionary[index] = value;
+        return value.State;
     }
 
     [Benchmark(Description = "DWH-ACCESS-WRITE-DATASHELF-DIRTY-ROUNDTRIP")]
-    public void DataShelfWrite()
+    public int DataShelfWrite()
     {
         var index = NextIndex();
         var handle = _handles[index];
-        _shelf.GetRef(handle).State++;
-        // Reset in the measured method so every invocation starts the next one clean.
-        // This intentionally measures the full dirty-bit round trip plus the write.
+        var record = _shelf.GetRef(handle);
+        record.State++;
+        var result = record.State;
+        // Reset dirty state so each subsequent visit measures the same round trip.
         _shelf.MarkClean(handle);
+        return result;
     }
 
     [GlobalCleanup]

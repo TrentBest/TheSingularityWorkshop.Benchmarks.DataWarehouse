@@ -36,7 +36,7 @@ flowchart LR
 
 ## 01 What
 
-The suite currently measures sequential reads, sequential writes, allocation/reclamation, handle-state queries, dirty-state transitions, and dirty-slot enumeration at controlled dirty densities. It uses BenchmarkDotNet in Release mode and preserves reports as workflow artifacts.
+The suite currently measures sequential reads and writes, slot allocation/reclamation, shared-lake page-run allocation/reuse, native-region creation/release, shelf capacity growth with live records, handle-state queries, dirty-slot-to-handle resolution, dirty-state transitions, and dirty-slot enumeration at controlled dirty densities. It uses BenchmarkDotNet in Release mode and preserves reports as workflow artifacts.
 
 ## 02 Why
 
@@ -99,9 +99,9 @@ The project references the sibling source checkout intentionally while the libra
 | `DWH-ACCESS-WRITE-DICTIONARY` | Sequential record write | Dictionary lookup/update |
 | `DWH-ACCESS-WRITE-DATASHELF-DIRTY-ROUNDTRIP` | Record write plus dirty-bit set/clear | Validated handle and dirty-state round trip |
 | `DWH-LIFECYCLE-ALLOCATE-FREE` | Slot allocation and reclamation | DataShelf free-stack path |
-| `DWH-LIFECYCLE-DICTIONARY-ADD-REMOVE` | Add/remove lifecycle control | Dictionary |
+| `DWH-LIFECYCLE-DICTIONARY-ADD-REMOVE` | Add/remove lifecycle control | Dictionary |\n| `DWH-LAKE-SHARED-SHELF-ALLOCATE-FREE` | Allocate/reclaim 1, 16, or 128 shelves from a retained shared region | Shared lake buddy allocator |\n| `DWH-LAKE-REGION-CREATE-RELEASE` | Create and release a native backing region | Native region allocation lifecycle |\n| `DWH-GROWTH-POPULATE-AND-ENSURE-CAPACITY` | Populate live records and grow shelf capacity | Page-run replacement and metadata/payload preservation |
 | `DWH-TRACKING-IS-ALIVE` | Valid-handle liveness query | DataShelf liveness bitmap and handle validation |
-| `DWH-TRACKING-IS-DIRTY` | Clean-handle dirty-state query | DataShelf dirty bitmap and handle validation |
+| `DWH-TRACKING-IS-DIRTY` | Clean-handle dirty-state query | DataShelf dirty bitmap and handle validation |\n| `DWH-TRACKING-TRY-GET-HANDLE` | Resolve a live slot index to its current generation-checked handle | DataShelf handle reconstruction from side-band generation state |
 | `DWH-TRACKING-DIRTY-ROUNDTRIP` | Clean/dirty transition pair | Repeated dirty-bit transition on a valid handle |
 | `DWH-TRACKING-COPY-DIRTY-SLOTS` | Dirty slot enumeration | 0%, 1%, 50%, and 100% dirty density, 65,536-slot shelf |
 
@@ -118,10 +118,10 @@ The access suite uses 65,536 pre-created records and cycles through them sequent
 3. Allocation/free churn and fragmentation behavior.
 4. Broader dirty-bit state transitions, larger capacity sweeps, and density scaling beyond the initial 65,536-slot enumeration cases.
 5. Page alignment and record-size effects.
-6. Allocation count and managed bytes on the steady-state path.
+6. Allocation count and managed bytes on the steady-state path.\n7. Region fragmentation and random allocate/free interleavings.
 7. Handle-validation overhead with direct pointer/index controls.
 8. Multiple shelves and independent data types.
 
 These are planned categories, not measured results. The current CI workflow confirms that the configured harness runs and produces artifacts; it does not yet establish a performance winner or enforce regression limits.
 
-<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop avatar" width="200" /></p>
+<p align="center"><img src="https://raw.githubusercontent.com/TrentBest/FSM_API/master/Documentation/Branding/TheSingularityWorkshop.png" alt="The Singularity Workshop" width="200" /></p>

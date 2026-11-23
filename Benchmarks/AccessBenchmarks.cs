@@ -130,9 +130,8 @@ public class AccessWriteBenchmarks
     {
         var index = NextIndex();
         var handle = _handles[index];
-        var record = _shelf.GetRef(handle);
-        record.State++;
-        var result = record.State;
+        _shelf.GetRef(handle).State++;
+        var result = _shelf.Read(handle).State;
         // Reset dirty state so each subsequent visit measures the same round trip.
         _shelf.MarkClean(handle);
         return result;

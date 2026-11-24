@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: TrentBest/TheSingularityWorkshop.DataWarehouse
-          ref: 33187496c32ce9ce7bcb253fa17a990027768500
+          ref: f99ded40323fcb18c8a19f5dd3abbc7e7d492644
           path: TheSingularityWorkshop.DataWarehouse
 
       - name: Set up .NET
